@@ -27,6 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _page = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,10 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "This is a demo app",
-              style: TextStyle(color: Colors.white),
-            )
+            Text('Page '+_page.toString(), textScaleFactor: 2.0,style: TextStyle(color: Colors.white),),
           ],
         ),
       ),
@@ -59,6 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         onTap: (index) {
           //Handle button tap
+          setState(() {
+            _page = index;
+          });
         },
       ),
     );
