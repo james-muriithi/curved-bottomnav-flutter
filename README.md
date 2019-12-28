@@ -2,5 +2,5 @@
 
 A new simple curved bottom nav Flutter project.
 
-# Screenshot
-![Screen Shot]()
+# Demo
+![Gif](https://media.giphy.com/media/U2AYJ0gmyh2u7b0ZiM/giphy.gif)
