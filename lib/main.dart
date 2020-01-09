@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Botttom Navigation',
       theme: ThemeData(
-        primaryColor: Colors.white,
+        primaryColor: Colors.blue,
       ),
       home: MyHomePage(title: 'Botttom Navigation'),
     );
@@ -27,7 +27,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _page = 0;
+  Widget _seat(String buttonText) {
+    return Container(
+      width: 50,
+      margin: EdgeInsets.all(5.0),
+      child: OutlineButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+        child: new Text(
+          buttonText,
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+        ),
+        onPressed: () {},
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,32 +50,74 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Container(
-        color: Colors.deepOrange,
+        margin: const EdgeInsets.only(top: 25.0, left: 10.0, right: 10.0),
+        color: Colors.white30,
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Page '+_page.toString(), textScaleFactor: 2.0,style: TextStyle(color: Colors.white),),
+            Row(
+              children: <Widget>[
+                _seat('1'),
+                _seat('2'),
+                Container(
+                  width: 30,
+                ),
+                Container(
+                  width: 50,
+                ),
+                Container(
+                  width: 50,
+                ),
+                Container(
+                  width: 50,
+                  child: Image.network(
+                      'https://james-muriithi.github.io/bus/images/driver.png'),
+                )
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                _seat('1'),
+                _seat('2'),
+                Container(
+                  width: 30,
+                ),
+                _seat('1'),
+                _seat('2'),
+                _seat('1'),
+              ],
+            )
           ],
         ),
       ),
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.white24,
         height: 50,
         index: 0,
         items: <Widget>[
-          Icon(Icons.home, size: 25,color: Colors.pink,),
-          Icon(Icons.favorite, size: 25,color: Colors.pink,),
-          Icon(Icons.shopping_cart, size: 25,color: Colors.pink,),
-          Icon(Icons.account_circle, size: 25,color: Colors.pink,),
+          Icon(
+            Icons.airline_seat_legroom_extra,
+            size: 25,
+            color: Colors.pink,
+          ),
+          Icon(
+            Icons.directions_bus,
+            size: 25,
+            color: Colors.pink,
+          ),
+          Icon(
+            Icons.history,
+            size: 25,
+            color: Colors.pink,
+          ),
+          Icon(
+            Icons.account_circle,
+            size: 25,
+            color: Colors.pink,
+          ),
         ],
-        onTap: (index) {
-          //Handle button tap
-          setState(() {
-            _page = index;
-          });
-        },
+        onTap: (index) {},
       ),
     );
   }
