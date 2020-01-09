@@ -8,11 +8,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Botttom Navigation',
+      title: 'Seat Arrangement',
       theme: ThemeData(
         primaryColor: Colors.blue,
       ),
-      home: MyHomePage(title: 'Botttom Navigation'),
+      home: MyHomePage(title: 'Seat Arrangement'),
     );
   }
 }
@@ -27,6 +27,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  /// the seat map array
+  /// the letters represents seats
+  /// underscores rep spaces*/
   List<String> _map = [
     'ee____',
     'ee_eee',
@@ -41,39 +44,50 @@ class _MyHomePageState extends State<MyHomePage> {
     'eeeeee',
   ];
 
+  /// a function that returns the seats as buttons
+  /// in Rows*/
   List<Widget> _buttons() {
-    var label = 0;
+    // the button label which starts at seat 1
+    var label = 1;
+    // iterate through the seat map array
     List<Widget> myButtons = List.generate(_map.length, (i) {
+      // convert the string of every element to an array to get individual seats
       var row = _map[i].split('');
+      // list to append the buttons and empty spaces
       List<Widget> myList = [];
+      // counter per row
       var counter = 0;
+      // iterate through a row
       row.forEach((item) {
-        var seat = new Seat((label + 1).toString(), false,
-            MediaQuery.of(context).size.width / 7.5);
-        if (item.toString().trim() == '_' && counter % 2 == 0) {
-          // print(object)
-          myList.add(Container(
-            width: MediaQuery.of(context).size.width / 7.5,
-            margin: EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0),
-          ));
-        } else if (item.toString().trim() == '_' && i == 0 && counter == 5) {
+        // initialize the Seat class
+        var seat = new Seat(
+            (label).toString(), false, MediaQuery.of(context).size.width / 7.5);
+        // the last seat in row 1 add the driver icon
+        if (item.toString().trim() == '_' && i == 0 && counter == 5) {
           myList.add(Container(
             width: MediaQuery.of(context).size.width / 7.5,
             child: seat._driver(),
           ));
-        } else if (item.toString().trim() == '_') {
+        }
+        // if the item is an underscore add an empty container to the list
+        else if (item.toString().trim() == '_') {
           myList.add(Container(
             width: MediaQuery.of(context).size.width / 7.5,
             margin: EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0),
           ));
         } else {
+          //else add a seat button
+          // increment the label counter
           label++;
           myList.add(seat);
         }
+        // increment the per row counter
         counter++;
       });
+      // return a row with the seat buttons as children
       return new Row(children: myList);
     });
+
     return myButtons;
   }
 
@@ -93,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[Column(children: _buttons())],
         ),
       ),
+      // bottom nav
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.white24,
         height: 50,
@@ -125,6 +140,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+/// a seat class that takes in 3 arguments
+/// button text, bool changebutton color and the width of the  button
 class Seat extends StatefulWidget {
   final String buttonText;
   bool changeButtonColor;
@@ -141,35 +158,33 @@ class Seat extends StatefulWidget {
 }
 
 class MySeatState extends State<Seat> {
+  // function that returns seat button widget
+  Widget _seat() {
+    Color _mycolor = Color.fromRGBO(150, 150, 150, 1);
+    return Container(
+      width: widget.width,
+      margin: EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0),
+      child: MaterialButton(
+        color:
+            widget.changeButtonColor ? Color.fromRGBO(48, 119, 1, 1) : _mycolor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+        child: new Text(
+          widget.buttonText,
+          style: TextStyle(
+              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        onPressed: () {
+          setState(() {
+            widget.changeButtonColor = !widget.changeButtonColor;
+          });
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget _seat() {
-      Color _mycolor = Color.fromRGBO(150, 150, 150, 1);
-      return Container(
-        width: widget.width,
-        margin: EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0),
-        child: MaterialButton(
-          color: widget.changeButtonColor ? Color.fromRGBO(48, 119, 1, 1) : _mycolor,
-          // highlightColor: changeButtonColor ? Color.fromRGBO(48, 119, 1, 1): Color.fromRGBO(48, 119, 1, 1),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
-          child: new Text(
-            widget.buttonText,
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
-          ),
-          onPressed: () {
-            setState(() {
-              widget.changeButtonColor = !widget.changeButtonColor;
-            });
-          },
-        ),
-      );
-    }
-
     return _seat();
   }
 }
