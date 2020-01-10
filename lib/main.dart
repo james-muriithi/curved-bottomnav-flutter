@@ -1,5 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 
 void main() => runApp(MyApp());
 
@@ -146,7 +148,9 @@ class Seat extends StatefulWidget {
   final String buttonText;
   bool changeButtonColor;
   final double width;
-  Seat(this.buttonText, this.changeButtonColor, this.width);
+  final Color disabledColor;
+  Seat(this.buttonText, this.changeButtonColor, this.width,
+      {this.disabledColor});
 
   Widget _driver() {
     return Image.network(
@@ -158,6 +162,15 @@ class Seat extends StatefulWidget {
 }
 
 class MySeatState extends State<Seat> {
+  String url =
+      'https://examinationcomplaint.theschemaqhigh.co.ke/HCI/api/book/?bus_id=1&booked_seats';
+  Future _fetchBooked() async {
+    var response = await get(url);
+    var jsonData = jsonDecode(response.body);
+    print(jsonData);
+    return jsonData;
+  }
+
   // function that returns seat button widget
   Widget _seat() {
     Color _mycolor = Color.fromRGBO(150, 150, 150, 1);
@@ -165,8 +178,11 @@ class MySeatState extends State<Seat> {
       width: widget.width,
       margin: EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0),
       child: MaterialButton(
-        color:
-            widget.changeButtonColor ? Color.fromRGBO(48, 119, 1, 1) : _mycolor,
+        color: widget.disabledColor != null
+            ? widget.disabledColor
+            : widget.changeButtonColor
+                ? Color.fromRGBO(48, 119, 1, 1)
+                : _mycolor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
         child: new Text(
@@ -185,6 +201,7 @@ class MySeatState extends State<Seat> {
 
   @override
   Widget build(BuildContext context) {
+    _fetchBooked();
     return _seat();
   }
 }
