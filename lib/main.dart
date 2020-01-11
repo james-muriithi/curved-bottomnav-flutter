@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,6 +30,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Future<List<Widget>> _myButons;
+
+  @override
+  void initState() {
+    super.initState();
+    _myButons = _buttons();
+  }
+
   /// the seat map array
   /// the letters represents seats
   /// underscores rep spaces*/
@@ -46,51 +55,72 @@ class _MyHomePageState extends State<MyHomePage> {
     'eeeeee',
   ];
 
+  String url =
+      'https://examinationcomplaint.theschemaqhigh.co.ke/HCI/api/book/?bus_id=1&booked_seats';
+  Future _fetchBooked() async {
+    var response = await get(url);
+    var jsonData = jsonDecode(response.body);
+    return jsonData;
+  }
+
   /// a function that returns the seats as buttons
   /// in Rows*/
-  List<Widget> _buttons() {
+  Future<List<Widget>> _buttons() {
     // the button label which starts at seat 1
     var label = 1;
     // iterate through the seat map array
-    List<Widget> myButtons = List.generate(_map.length, (i) {
-      // convert the string of every element to an array to get individual seats
-      var row = _map[i].split('');
-      // list to append the buttons and empty spaces
-      List<Widget> myList = [];
-      // counter per row
-      var counter = 0;
-      // iterate through a row
-      row.forEach((item) {
-        // initialize the Seat class
-        var seat = new Seat(
-            (label).toString(), false, MediaQuery.of(context).size.width / 7.5);
-        // the last seat in row 1 add the driver icon
-        if (item.toString().trim() == '_' && i == 0 && counter == 5) {
-          myList.add(Container(
-            width: MediaQuery.of(context).size.width / 7.5,
-            child: seat._driver(),
-          ));
-        }
-        // if the item is an underscore add an empty container to the list
-        else if (item.toString().trim() == '_') {
-          myList.add(Container(
-            width: MediaQuery.of(context).size.width / 7.5,
-            margin: EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0),
-          ));
-        } else {
-          //else add a seat button
-          // increment the label counter
-          label++;
-          myList.add(seat);
-        }
-        // increment the per row counter
-        counter++;
-      });
-      // return a row with the seat buttons as children
-      return new Row(children: myList);
-    });
 
-    return myButtons;
+    var myFuture = _fetchBooked().then((_bookedSeats) {
+      List<Widget> myButtons = List.generate(_map.length, (i) {
+        // convert the string of every element to an array to get individual seats
+        var row = _map[i].split('');
+        // list to append the buttons and empty spaces
+        List<Widget> myList = [];
+        // counter per row
+        var counter = 0;
+        // iterate through a row
+        row.forEach((item) {
+          // initialize the Seat class
+          var seat = new Seat((label).toString(), false,
+              MediaQuery.of(context).size.width / 7.5);
+          // the last seat in row 1 add the driver icon
+          if (item.toString().trim() == '_' && i == 0 && counter == 5) {
+            myList.add(Container(
+              width: MediaQuery.of(context).size.width / 7.5,
+              child: seat._driver(),
+            ));
+          }
+          // if the item is an underscore add an empty container to the list
+          else if (item.toString().trim() == '_') {
+            myList.add(Container(
+              width: MediaQuery.of(context).size.width / 7.5,
+              margin: EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0),
+            ));
+          } else {
+            //else add a seat button
+            // increment the label counter
+            if (_bookedSeats.contains(label.toString())) {
+              seat.disabledColor = Colors.red;
+            }
+            myList.add(seat);
+            label++;
+          }
+          // increment the per row counter
+          counter++;
+        });
+        // return a row with the seat buttons as children
+        return new Row(children: myList);
+      });
+      return myButtons;
+    });
+    return myFuture;
+  }
+
+  Future<List<Widget>> _refresh() async {
+    setState(() {
+      _myButons = _buttons();
+    });
+    return _myButons;
   }
 
   @override
@@ -104,9 +134,23 @@ class _MyHomePageState extends State<MyHomePage> {
         color: Colors.white30,
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: ListView(
-          padding: EdgeInsets.only(bottom: 30.0, top: 40.0),
-          children: <Widget>[Column(children: _buttons())],
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: FutureBuilder(
+              future: _myButons,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (!snapshot.hasData) {
+                  return Container(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                return ListView(
+                  padding: EdgeInsets.only(bottom: 30.0, top: 40.0),
+                  children: <Widget>[Column(children: snapshot.data)],
+                );
+              }),
         ),
       ),
       // bottom nav
@@ -148,7 +192,7 @@ class Seat extends StatefulWidget {
   final String buttonText;
   bool changeButtonColor;
   final double width;
-  final Color disabledColor;
+  Color disabledColor;
   Seat(this.buttonText, this.changeButtonColor, this.width,
       {this.disabledColor});
 
@@ -162,15 +206,6 @@ class Seat extends StatefulWidget {
 }
 
 class MySeatState extends State<Seat> {
-  String url =
-      'https://examinationcomplaint.theschemaqhigh.co.ke/HCI/api/book/?bus_id=1&booked_seats';
-  Future _fetchBooked() async {
-    var response = await get(url);
-    var jsonData = jsonDecode(response.body);
-    print(jsonData);
-    return jsonData;
-  }
-
   // function that returns seat button widget
   Widget _seat() {
     Color _mycolor = Color.fromRGBO(150, 150, 150, 1);
@@ -191,9 +226,17 @@ class MySeatState extends State<Seat> {
               fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         onPressed: () {
-          setState(() {
-            widget.changeButtonColor = !widget.changeButtonColor;
-          });
+          if (widget.disabledColor != null) {
+            Fluttertoast.showToast(
+                msg: 'Seat is already booked!',
+                toastLength: Toast.LENGTH_SHORT,
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.BOTTOM);
+          } else {
+            setState(() {
+              widget.changeButtonColor = !widget.changeButtonColor;
+            });
+          }
         },
       ),
     );
@@ -201,7 +244,6 @@ class MySeatState extends State<Seat> {
 
   @override
   Widget build(BuildContext context) {
-    _fetchBooked();
     return _seat();
   }
 }
