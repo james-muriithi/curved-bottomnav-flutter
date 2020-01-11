@@ -1,4 +1,4 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Seat Arrangement',
       theme: ThemeData(
         primaryColor: Colors.blue,
+        accentColor: Colors.blueAccent,
       ),
       home: MyHomePage(title: 'Seat Arrangement'),
     );
@@ -31,6 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<List<Widget>> _myButons;
+  var _currentIndex = 0;
 
   @override
   void initState() {
@@ -154,34 +156,68 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       // bottom nav
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white24,
-        height: 50,
-        index: 0,
-        items: <Widget>[
-          Icon(
-            Icons.airline_seat_legroom_extra,
-            size: 25,
-            color: Colors.pink,
-          ),
-          Icon(
-            Icons.directions_bus,
-            size: 25,
-            color: Colors.pink,
-          ),
-          Icon(
-            Icons.history,
-            size: 25,
-            color: Colors.pink,
-          ),
-          Icon(
-            Icons.account_circle,
-            size: 25,
-            color: Colors.pink,
-          ),
-        ],
-        onTap: (index) {},
-      ),
+      bottomNavigationBar: BubbleBottomBar(
+          opacity: .2,
+          currentIndex: _currentIndex,
+          onTap: (int index) {
+            setState(() {
+              _currentIndex = index;
+            });
+            // _tabController.animateTo(index,
+            //     duration: Duration(milliseconds: 300), curve: Curves.ease);
+          },
+          elevation: 8,
+          hasNotch: false, //new
+          hasInk: true, //new, gives a cute ink effect
+          items: <BubbleBottomBarItem>[
+            BubbleBottomBarItem(
+                backgroundColor: Theme.of(context).primaryColor,
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.black,
+                ),
+                activeIcon: Icon(
+                  Icons.home,
+                  color: Theme.of(context).accentColor,
+                ),
+                title: Text("Home")),
+
+                BubbleBottomBarItem(
+                backgroundColor: Theme.of(context).primaryColor,
+                icon: Icon(
+                  Icons.directions_bus,
+                  color: Colors.black,
+                ),
+                activeIcon: Icon(
+                  Icons.directions_bus,
+                  color: Theme.of(context).primaryColor,
+                ),
+                title: Text("Buses")),
+
+                BubbleBottomBarItem(
+                backgroundColor: Theme.of(context).primaryColor,
+                icon: Icon(
+                  Icons.history,
+                  color: Colors.black,
+                ),
+                activeIcon: Icon(
+                  Icons.history,
+                  color: Theme.of(context).primaryColor,
+                ),
+                title: Text("History")),
+
+                BubbleBottomBarItem(
+                backgroundColor: Theme.of(context).primaryColor,
+                icon: Icon(
+                  Icons.account_circle,
+                  color: Colors.black,
+                ),
+                activeIcon: Icon(
+                  Icons.account_circle,
+                  color: Theme.of(context).primaryColor,
+                ),
+                title: Text("Account")),
+          ]),
     );
   }
 }
