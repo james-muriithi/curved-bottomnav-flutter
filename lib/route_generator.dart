@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bottom_nav/main.dart';
+import 'package:bottom_nav/seat_arrangement.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
