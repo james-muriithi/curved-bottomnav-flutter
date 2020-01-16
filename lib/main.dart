@@ -2,7 +2,7 @@ import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'seat.dart';
 
 void main() => runApp(MyApp());
 
@@ -89,7 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
           if (item.toString().trim() == '_' && i == 0 && counter == 5) {
             myList.add(Container(
               width: MediaQuery.of(context).size.width / 7.5,
-              child: seat._driver(),
+              child: Image.network(
+                  'https://james-muriithi.github.io/bus/images/driver.png'),
             ));
           }
           // if the item is an underscore add an empty container to the list
@@ -181,8 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Theme.of(context).accentColor,
                 ),
                 title: Text("Home")),
-
-                BubbleBottomBarItem(
+            BubbleBottomBarItem(
                 backgroundColor: Theme.of(context).primaryColor,
                 icon: Icon(
                   Icons.directions_bus,
@@ -193,8 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Theme.of(context).primaryColor,
                 ),
                 title: Text("Buses")),
-
-                BubbleBottomBarItem(
+            BubbleBottomBarItem(
                 backgroundColor: Theme.of(context).primaryColor,
                 icon: Icon(
                   Icons.history,
@@ -205,8 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Theme.of(context).primaryColor,
                 ),
                 title: Text("History")),
-
-                BubbleBottomBarItem(
+            BubbleBottomBarItem(
                 backgroundColor: Theme.of(context).primaryColor,
                 icon: Icon(
                   Icons.account_circle,
@@ -219,67 +217,5 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text("Account")),
           ]),
     );
-  }
-}
-
-/// a seat class that takes in 3 arguments
-/// button text, bool changebutton color and the width of the  button
-class Seat extends StatefulWidget {
-  final String buttonText;
-  bool changeButtonColor;
-  final double width;
-  Color disabledColor;
-  Seat(this.buttonText, this.changeButtonColor, this.width,
-      {this.disabledColor});
-
-  Widget _driver() {
-    return Image.network(
-        'https://james-muriithi.github.io/bus/images/driver.png');
-  }
-
-  @override
-  MySeatState createState() => MySeatState();
-}
-
-class MySeatState extends State<Seat> {
-  // function that returns seat button widget
-  Widget _seat() {
-    Color _mycolor = Color.fromRGBO(150, 150, 150, 1);
-    return Container(
-      width: widget.width,
-      margin: EdgeInsets.only(left: 3.0, right: 3.0, bottom: 3.0),
-      child: MaterialButton(
-        color: widget.disabledColor != null
-            ? widget.disabledColor
-            : widget.changeButtonColor
-                ? Color.fromRGBO(48, 119, 1, 1)
-                : _mycolor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
-        child: new Text(
-          widget.buttonText,
-          style: TextStyle(
-              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        onPressed: () {
-          if (widget.disabledColor != null) {
-            Fluttertoast.showToast(
-                msg: 'Seat is already booked!',
-                toastLength: Toast.LENGTH_SHORT,
-                backgroundColor: Colors.red,
-                gravity: ToastGravity.BOTTOM);
-          } else {
-            setState(() {
-              widget.changeButtonColor = !widget.changeButtonColor;
-            });
-          }
-        },
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _seat();
   }
 }
