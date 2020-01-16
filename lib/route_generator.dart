@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bottom_nav/seat_arrangement.dart';
+// import 'package:bottom_nav/seat_arrangement.dart';
+import 'available_buses.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -8,7 +9,8 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => MyHomePage(title: 'Seat Arrangement'));
+        // return MaterialPageRoute(builder: (_) => MyHomePage(title: 'Seat Arrangement'));
+        return MaterialPageRoute(builder: (_) => Results());
       case '/second':
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.

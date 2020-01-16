@@ -147,6 +147,10 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               _currentIndex = index;
             });
+            // Navigator.of(context).pushNamed(
+            //   '/second',
+            //   arguments: 'Hello there from the first page!',
+            // );
             // _tabController.animateTo(index,
             //     duration: Duration(milliseconds: 300), curve: Curves.ease);
           },
