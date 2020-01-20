@@ -32,11 +32,6 @@ TextStyle normalBlackSmallTextStyle = TextStyle(
   fontSize: 12.0,
 );
 
-TextStyle boldGreenLargeTextStyle = TextStyle(
-  color: green,
-  fontSize: 16.0,
-);
-
 class ResultCard extends StatefulWidget {
   final String busName, numberPlate, from, to, availability, fare;
   ResultCard(this.busName, this.numberPlate, this.from, this.to,
@@ -51,6 +46,7 @@ class ResultCardState extends State<ResultCard> {
   Widget build(BuildContext context) {
     return Material(
       elevation: 4.0,
+      clipBehavior: Clip.antiAlias,
       color: Colors.white,
       borderRadius: BorderRadius.all(
         Radius.circular(6.0),
@@ -86,7 +82,9 @@ class ResultCardState extends State<ResultCard> {
                   ],
                 ),
               ),
-              Divider(),
+              Divider(
+                height: 4.0,
+              ),
               Padding(
                 padding: const EdgeInsets.only(
                     top: 8.0, bottom: 0.0, left: 16.0, right: 16.0),
@@ -120,24 +118,37 @@ class ResultCardState extends State<ResultCard> {
                 height: 16.0,
               ),
               Divider(
-                color: Colors.black,
                 height: 0.0,
               ),
               Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Book'.toUpperCase(),
-                      style: boldGreenLargeTextStyle,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.deepPurple,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        '/secon',
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Book'.toUpperCase(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
-                    Icon(
-                      Icons.keyboard_arrow_right,
-                      color: Colors.green,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -148,18 +159,22 @@ class ResultCardState extends State<ResultCard> {
   }
 
   Widget _showDetals(IconData icon, String label, String value) {
-    return Row(
-      children: <Widget>[
-      Icon(
-        icon,
-        color: Color.fromRGBO(153, 162, 168, 1),
-      ),
-      Text(
-        label,
-        style: lightJosefin,
-      ),
-      SizedBox(width: 60,),
-      Text(value, style: boldBlackLargeTextStyle),
-    ]);
+    return Container(
+        width: MediaQuery.of(context).size.width * 0.84,
+        child: Row(children: <Widget>[
+          Icon(
+            icon,
+            color: Color.fromRGBO(153, 162, 168, 1),
+          ),
+          Text(
+            label,
+            style: lightJosefin,
+          ),
+          Expanded(
+            child: Container(
+                alignment: Alignment.centerRight,
+                child: Text(value, style: boldBlackLargeTextStyle)),
+          )
+        ]));
   }
 }

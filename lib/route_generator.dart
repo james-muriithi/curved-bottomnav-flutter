@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:bottom_nav/seat_arrangement.dart';
+import 'package:bottom_nav/seat_arrangement.dart';
 import 'available_buses.dart';
 
 class RouteGenerator {
@@ -14,7 +14,8 @@ class RouteGenerator {
       case '/second':
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
-        return _errorRoute();
+        print('object');
+        return MaterialPageRoute(builder: (_) => MyHomePage(title: 'Seat Arrangement'));
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();
