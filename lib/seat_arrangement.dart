@@ -114,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Colors.deepPurple,
       ),
       body: Container(
         margin: EdgeInsets.only(left: 25.0, right: 5.0),
@@ -147,10 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {
               _currentIndex = index;
             });
-            // Navigator.of(context).pushNamed(
-            //   '/second',
-            //   arguments: 'Hello there from the first page!',
-            // );
+            // Navigator.pop(context);
             // _tabController.animateTo(index,
             //     duration: Duration(milliseconds: 300), curve: Curves.ease);
           },

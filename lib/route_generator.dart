@@ -11,14 +11,17 @@ class RouteGenerator {
       case '/':
         // return MaterialPageRoute(builder: (_) => MyHomePage(title: 'Seat Arrangement'));
         return MaterialPageRoute(builder: (_) => Results());
-      case '/second':
+        break;
+      case '/secon':
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
         print('object');
         return MaterialPageRoute(builder: (_) => MyHomePage(title: 'Seat Arrangement'));
+        break;
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute();
+        break;
     }
   }
 

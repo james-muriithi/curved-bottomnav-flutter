@@ -1,3 +1,4 @@
+import 'package:bottom_nav/seat_arrangement.dart';
 import 'package:flutter/material.dart';
 
 Color purpleColor = Color(0xFF2B1AAF);
@@ -128,8 +129,12 @@ class ResultCardState extends State<ResultCard> {
                   height: 50,
                   child: InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed(
-                        '/secon',
+                      Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                          builder: (context) =>
+                              new MyHomePage(title: 'Seat Arrangement'),
+                        ),
                       );
                     },
                     child: Row(

@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Seat Arrangement',
       theme: ThemeData(
-        primaryColor: Colors.blue,
+        primaryColor: Colors.deepPurple,
         accentColor: Colors.blueAccent,
       ),
       initialRoute: '/',
